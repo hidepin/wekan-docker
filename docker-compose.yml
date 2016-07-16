@@ -9,7 +9,7 @@ db:
   ports:
     - 27017
 # wekanの設定
-wekan:
+app:
   image: mquandalle/wekan
   volumes:
     - /etc/localtime:/etc/localtime:ro
