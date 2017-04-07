@@ -1,22 +1,21 @@
-# MongoDBの設定
-db:
-  image: mongo
-  volumes:
-    - /opt/docker/wekan/volumes/db/data/db:/data/db
-    - /opt/docker/wekan/volumes/db/dump:/dump
-    - /etc/localtime:/etc/localtime:ro
-  command: mongod --smallfiles --oplogSize 128
-  ports:
-    - 27017
-# wekanの設定
-app:
-  image: mquandalle/wekan
-  volumes:
-    - /etc/localtime:/etc/localtime:ro
-  links:
-    - db:wekandb
-  environment:
-    - MONGO_URL=mongodb://wekandb/wekan
-    - ROOT_URL=http://localhost:80
-  ports:
-    - 80:80
+version: '2'
+
+services:
+
+  db:
+    image: mongo:3.2.12
+    command: mongod --smallfiles --oplogSize 128
+    volumes:
+      - /opt/docker/wekan/volumes/db/data/db:/data/db
+      - /opt/docker/wekan/volumes/db/dump:/dump
+      - /etc/localtime:/etc/localtime:ro
+
+  app:
+    image: mquandalle/wekan:latest
+    ports:
+      - 8888:80
+    environment:
+      - MONGO_URL=mongodb://db:27017/wekan
+      - ROOT_URL=http://localhost
+    depends_on:
+      - db
